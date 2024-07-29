@@ -1,10 +1,10 @@
 import './App.css';
-import jeans from'./jeans3.jpg';
 import {useEffect, useState} from 'react';
+import PurchaseForm from './PurchaseForm.jsx';
 
 function App() {
   const [items, setItems] = useState([]);
-  console.log("Rendering with: ", items);
+  const [showForm, setShowForm] = useState(false);
 
   useEffect(()=>{
     fetchItems();
@@ -15,6 +15,15 @@ function App() {
     const json = await response.json();
 
     setItems([...items, ...json]);
+  }
+
+  const handleBuy = (event) => {
+    event.preventDefault();
+    togglePopup();
+  }
+
+  function togglePopup(){
+    setShowForm(!showForm);
   }
 
   return (
@@ -37,9 +46,12 @@ function App() {
           <img className='image' src={item.image} alt="Denim Jeans"></img>
           <h3>{item.title.split(' ').slice(0,3).join(' ')}</h3>
           <p className="price">${item.price}</p>
-          <p><button>Add to Cart</button></p>
+          <p><button onClick={(e) => handleBuy(e)}>Add to Cart</button></p>
       </div>
       ))}
+
+      {showForm && 
+        <PurchaseForm toggle={togglePopup}></PurchaseForm>}
         
       </div>
     </>
